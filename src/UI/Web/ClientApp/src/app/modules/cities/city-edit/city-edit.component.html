@@ -1,0 +1,165 @@
+<div class="lg:flex lg:items-center lg:justify-between">
+  <div class="flex-1 min-w-0">
+    <!-- Breadcrumb -->
+    <nav class="flex" aria-label="Breadcrumb">
+      <ol role="list" class="flex items-center space-x-4">
+        <li>
+          <div class="flex">
+            <a routerLink="/home" class="text-sm font-medium text-gray-500 hover:text-primary">Home</a>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <mat-icon class="flex-shrink-0 text-gray-400">chevron_right</mat-icon>
+            <a routerLink="/cities" class="ml-4 text-sm font-medium text-gray-500 hover:text-primary">Cities</a>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <mat-icon class="flex-shrink-0 text-gray-400">chevron_right</mat-icon>
+            <span class="ml-4 text-sm font-medium text-primary hover:text-primary">{{!id ? "Add new city" : "Update city"}}</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+    <!-- Title -->
+    <h2 class="mt-2 text-2xl font-bold leading-7 sm:text-3xl sm:truncate">
+      {{title}}
+    </h2>
+  </div>
+</div>
+
+<div class="form bg-card dark:bg-accent-700 rounded-lg mt-5 p-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div *ngIf="form.invalid && form.errors?.isDupeCity" class="alert alert-danger">
+    <strong>ERROR</strong>:
+    A city with the same <i>name</i>, <i>lat</i>,
+    <i>lon</i> and <i>country</i> already exists.
+  </div>
+
+  <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+    <!-- Name -->
+    <div class="sm:col-span-6">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>City name</mat-label>
+        <input matInput placeholder="City name..." [formControl]="form.get('name')" required>
+        <mat-error *ngIf="form.get('name').errors?.required">Name is required.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Latitude -->
+    <div class="sm:col-span-3">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>City latitude</mat-label>
+        <input matInput placeholder="Latitude..." [formControl]="form.get('lat')" required>
+        <mat-error *ngIf="form.get('lat').errors?.required">Latitude is required.</mat-error>
+        <mat-error *ngIf="form.get('lat').errors?.pattern">Latitude requires a positive or negative number with 0-4
+          decimal
+          values.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Longitude -->
+    <div class="sm:col-span-3">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>City longitude</mat-label>
+        <input matInput placeholder="Longitude..." [formControl]="form.get('lon')" required>
+        <mat-error *ngIf="form.get('lon').errors?.required">Longitude is required.</mat-error>
+        <mat-error *ngIf="form.get('lon').errors?.pattern">Longitude requires a positive or negative number with 0-4
+          decimal
+          values.</mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Country -->
+    <div class="sm:col-span-6">
+      <mat-form-field appearance="outline" *ngIf="countries | async as result" class="w-full">
+        <mat-label>Country</mat-label>
+        <mat-select id="countryId" formControlName="countryId" required>
+          <mat-option *ngFor="let country of result.source" [value]="country.id">
+            {{country.name}}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="form.get('countryId').errors?.required">Please select a Country.</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="form-group flex flex-row-reverse space-x-reverse space-x-4">
+    <button *ngIf="id" type="submit" (click)="onSubmit()" [disabled]="form.invalid" mat-raised-button color="primary">
+      Save
+    </button>
+    <button *ngIf="!id" type="submit" (click)="onSubmit()" [disabled]="form.invalid" mat-raised-button
+      color="primary">
+      Create
+    </button>
+    <button type="button" [routerLink]="['/cities']" mat-raised-button color="accent">
+      Cancel
+    </button>
+  </div>
+</div>
+
+<!-- Form debug info panel -->
+<div class="bg-card dark:bg-accent-700 rounded-lg mt-5 p-4">
+  <h3 class="text-lg leading-6 font-medium">
+    Form Debug Info
+  </h3>
+  <div>
+      <p class="mt-2 max-w-2xl text-sm text-gray-500">
+        Form value:
+      </p>
+      <div>
+        {{ form.value | json }}
+      </div>
+      <p class="mt-2 max-w-2xl text-sm text-gray-500">
+        Form status:
+      </p>
+      <div>
+        {{ form.status | json }}
+      </div>
+  </div>
+</div>
+
+<!-- Form activity log panel -->
+<div class="bg-card dark:bg-accent-700 rounded-lg mt-5 p-4">
+  <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
+    <div class="ml-4 mt-2">
+      <h3 class="text-lg leading-6 font-medium">
+        Form Activity Log
+      </h3>
+    </div>
+    <div class="ml-4 mt-2 flex-shrink-0">
+      <button (click)="clearLog()" [disabled]="logMessages.length == 0" 
+              mat-raised-button color="primary" 
+              class="relative inline-flex items-center px-4 py-2">
+        Clear Log
+      </button>
+    </div>
+  </div>
+  
+  <div class="flow-root mt-2">
+    <ul role="list" class="-mb-8">
+      <li *ngFor="let activity of logMessages; let last = last;" >
+        <div class="relative pb-8">
+          <span *ngIf="!last" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+          <div class="relative flex space-x-3">
+            <div>
+              <span class="h-8 w-8 rounded-full bg-blue-400 flex items-center justify-center ring-8 ring-white dark:ring-accent-700">
+                <mat-icon class="text-white">info_outline</mat-icon>
+              </span>
+            </div>
+            <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+              <div>
+                <p class="text-sm">{{activity.message}}</p>
+              </div>
+              <div class="text-right text-sm whitespace-nowrap">
+                <time>{{activity.date | date:'medium'}}</time>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

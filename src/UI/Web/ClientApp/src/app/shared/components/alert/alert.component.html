@@ -1,0 +1,55 @@
+<div class="tw-alert-container" *ngIf="!dismissible || dismissible && !dismissed">
+
+    <!-- Border -->
+    <div class="tw-alert-border" *ngIf="appearance === 'border'"></div>
+
+    <!-- Icon -->
+    <div class="tw-alert-icon" *ngIf="showIcon">
+
+        <!-- Custom icon -->
+        <div class="tw-alert-custom-icon">
+            <ng-content select="[twAlertIcon]"></ng-content>
+        </div>
+
+        <!-- Default icons -->
+        <div class="tw-alert-default-icon">
+
+            <mat-icon *ngIf="type === 'primary'">check_circle_outline</mat-icon>
+
+            <mat-icon *ngIf="type === 'accent'">check_circle_outline</mat-icon>
+
+            <mat-icon *ngIf="type === 'warn'">error_outline</mat-icon>
+
+            <mat-icon *ngIf="type === 'basic'">check_circle</mat-icon>
+
+            <mat-icon *ngIf="type === 'info'">info_outline</mat-icon>
+
+            <mat-icon *ngIf="type === 'success'">check_circle_outline</mat-icon>
+
+            <mat-icon *ngIf="type === 'warning'">warning_outline</mat-icon>
+
+            <mat-icon *ngIf="type === 'error'">error_outline</mat-icon>
+
+        </div>
+
+    </div>
+
+    <!-- Content -->
+    <div class="tw-alert-content">
+
+        <div class="tw-alert-title">
+            <ng-content select="[twAlertTitle]"></ng-content>
+        </div>
+
+        <div class="tw-alert-message">
+            <ng-content></ng-content>
+        </div>
+
+    </div>
+
+    <!-- Dismiss button -->
+    <button class="tw-alert-dismiss-button" mat-icon-button (click)="dismiss()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+</div>

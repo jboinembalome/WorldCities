@@ -1,0 +1,83 @@
+<div class="lg:flex lg:items-center lg:justify-between">
+  <div class="flex-1 min-w-0">
+    <!-- Breadcrumb -->
+    <nav class="flex" aria-label="Breadcrumb">
+      <ol role="list" class="flex items-center space-x-4">
+        <li>
+          <div class="flex">
+            <a routerLink="/home" class="text-sm font-medium text-gray-500 hover:text-primary">Home</a>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <mat-icon class="flex-shrink-0 text-gray-400">chevron_right</mat-icon>
+            <a routerLink="/countries" class="ml-4 text-sm font-medium text-gray-500 hover:text-primary">Countries</a>
+          </div>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <mat-icon class="flex-shrink-0 text-gray-400">chevron_right</mat-icon>
+            <span class="ml-4 text-sm font-medium text-primary hover:text-primary">{{!id ? "Add new country" : "Update country"}}</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+    <!-- Title -->
+    <h2 class="mt-2 text-2xl font-bold leading-7 sm:text-3xl sm:truncate">
+      {{title}}
+    </h2>
+  </div>
+</div>
+
+
+<div class="bg-card dark:bg-accent-700 rounded-lg mt-5 p-4" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <div class="grid grid-cols-1 gap-y-4 gap-x-4 sm:grid-cols-6">
+     <!-- Name -->
+     <div class="sm:col-span-6">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Country name</mat-label>
+        <input matInput placeholder="Country name..." [formControl]="form.get('name')" required>
+        <mat-error *ngIf="form.get('name').errors?.required">Name is required.</mat-error>
+        <mat-error *ngIf="form.get('name').errors?.isDupeField">Name already exists: please choose another.</mat-error>
+      </mat-form-field>
+     </div>
+
+     <!-- ISO2 -->
+     <div class="sm:col-span-3">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>ISO 3166-1 ALPHA-2 Country Code (2 letters)</mat-label>
+        <input matInput placeholder="2 letters country code..." [formControl]="form.get('iso2')" required>
+        <mat-error *ngIf="form.get('iso2').errors?.required">ISO 3166-1 ALPHA-2 country code is required.</mat-error>
+        <mat-error *ngIf="form.get('iso2').errors?.pattern">ISO 3166-1 ALPHA-2 country code requires 2 letters.</mat-error>
+        <mat-error *ngIf="form.get('iso2').errors?.isDupeField">This ISO 3166-1 ALPHA-2 country code already exists: please choose another.</mat-error>
+      </mat-form-field>
+     </div>
+
+     <!-- ISO3 -->
+     <div class="sm:col-span-3">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>ISO 3166-1 ALPHA-3 Country Code (3 letters)</mat-label>
+        <input matInput placeholder="3 letters country code..." [formControl]="form.get('iso3')" required>
+        <mat-error *ngIf="form.get('iso3').errors?.required">ISO 3166-1 ALPHA-3 country code is required.</mat-error>
+        <mat-error *ngIf="form.get('iso3').errors?.pattern">ISO 3166-1 ALPHA-3 country code requires 3 letters.</mat-error>
+        <mat-error *ngIf="form.get('iso3').errors?.isDupeField">This ISO 3166-1 ALPHA-3 country code already exists: please choose another.</mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+  
+  <!-- Actions -->
+  <div class="flex flex-row-reverse space-x-reverse space-x-4">
+    <button *ngIf="id" type="submit" (click)="onSubmit()" [disabled]="form.invalid" mat-raised-button color="primary">
+      Save
+    </button>
+    <button *ngIf="!id" type="submit" (click)="onSubmit()" [disabled]="form.invalid" mat-raised-button
+      color="primary">
+      Create
+    </button>
+    <button type="button" [routerLink]="['/countries']" mat-raised-button color="accent">
+      Cancel
+    </button>
+  </div>
+
+</div>
