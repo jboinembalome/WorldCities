@@ -22,4 +22,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Core\Application\WorldCities.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\Infrastructure\WorldCities.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -3,7 +3,7 @@ using FluentAssertions;
 using Moq;
 using WorldCities.Application.Behaviours;
 using WorldCities.Application.Exceptions;
-using WorldCities.Application.Features.Boards.Commands.UpdateBoard;
+using WorldCities.Application.Features.Cities.Commands.UpdateCity;
 using WorldCities.Application.Interfaces.Persistence;
 using WorldCities.Application.Profiles;
 using WorldCities.Application.UnitTests.Mocks;
@@ -19,11 +19,14 @@ namespace WorldCities.Application.UnitTests.Behaviours
     public class ValidationBehaviourTests
     {
         private readonly IMapper _mapper;
-        private readonly Mock<IAsyncRepository<Board, int>> _mockBoardRepository;
+        private readonly Mock<IAsyncRepository<City, int>> _mockCityRepository;
+        private readonly Mock<IAsyncRepository<Country, int>> _mockCountryRepository;
 
         public ValidationBehaviourTests()
         {
-            _mockBoardRepository = RepositoryMocks.GetBoardRepository();
+            _mockCityRepository = RepositoryMocks.GetCityRepository();
+            _mockCountryRepository = RepositoryMocks.GetCountryRepository();
+
             var configurationProvider = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MappingProfile>();
@@ -38,11 +41,11 @@ namespace WorldCities.Application.UnitTests.Behaviours
         [InlineData("  ")]
         public async Task Handle_EmptyName_ThrowsAnValidationException(string boardName)
         {
-            var handler = new UpdateBoardCommandHandler(_mapper, _mockBoardRepository.Object);
-            var updateBoardCommand = new UpdateCityCommand { Name = boardName, BoardId = 1 };
+            var handler = new UpdateCityCommandHandler(_mapper, _mockCityRepository.Object, _mockCountryRepository.Object);
+            var updateBoardCommand = new UpdateCityCommand { Name = boardName, Id = 1, Lat = 1, Lon= 1 };
             var validationBehavior = new ValidationBehaviour<UpdateCityCommand, MediatR.Unit>(new List<UpdateCityCommandValidator>()
             {
-                new UpdateBoardCommandValidator()
+                new UpdateCityCommandValidator()
             });
 
             // Act

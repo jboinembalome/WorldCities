@@ -29,13 +29,13 @@ namespace WorldCities.Application.IntegrationTests.Persistence
         {
             // Arrange
             var _currentUserService = "00000000-0000-0000-0000-000000000000"; // Value of the current user in DatabaseFixture
-            var testBoardName = "testBoard";
-            var board = new Board { Name = testBoardName };
+            var testCityName = "testBoard";
+            var board = new City { Name = testCityName , Name_ASCII = testCityName};
 
             _database.SetDbContext();
 
             // Act
-            _database.DbContext.Boards.Add(board);
+            _database.DbContext.Cities.Add(board);
             await _database.DbContext.SaveChangesAsync();
 
             // Assert

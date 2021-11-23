@@ -7,11 +7,11 @@ using Xunit;
 namespace WorldCities.Application.IntegrationTests.Persistence.Boards
 {
     [Collection("Database collection")]
-    public class BoardRepositoryDeleteTests : IAsyncLifetime
+    public class CityRepositoryDeleteTests : IAsyncLifetime
     {
         private readonly DatabaseFixture _database;
 
-        public BoardRepositoryDeleteTests(DatabaseFixture database)
+        public CityRepositoryDeleteTests(DatabaseFixture database)
         {
             _database = database;
         }
@@ -21,22 +21,22 @@ namespace WorldCities.Application.IntegrationTests.Persistence.Boards
         public Task InitializeAsync() => Task.CompletedTask;
 
         [Fact]
-        public async Task DeleteAsync_ExistingBoard_BoardDeleted()
+        public async Task DeleteAsync_ExistingCity_CityDeleted()
         {           
             // Arrange
-            var testBoardName = "testBoard";
-            var board = new Board { Name = testBoardName };
-            var boardRepository =  _database.GetRepository<Board, int>();
+            var testCityName = "testCity";
+            var city = new City { Name = testCityName, Name_ASCII = testCityName };
+            var cityRepository =  _database.GetRepository<City, int>();
 
-            _database.DbContext.Boards.Add(board);
+            _database.DbContext.Cities.Add(city);
             await _database.DbContext.SaveChangesAsync();
 
             // Act
-            await boardRepository.DeleteAsync(board);
-            var boardDeleted = await _database.DbContext.Boards.FirstOrDefaultAsync(b => b.Name == testBoardName);
+            await cityRepository.DeleteAsync(city);
+            var cityDeleted = await _database.DbContext.Cities.FirstOrDefaultAsync(b => b.Name == testCityName);
 
             // Assert
-            boardDeleted.Should().BeNull();
+            cityDeleted.Should().BeNull();
         }
     }
 }

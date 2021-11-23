@@ -7,11 +7,11 @@ using Xunit;
 namespace WorldCities.Application.IntegrationTests.Persistence.Boards
 {
     [Collection("Database collection")]
-    public class BoardRepositoryCreateTests : IAsyncLifetime
+    public class CityRepositoryCreateTests : IAsyncLifetime
     {
         private readonly DatabaseFixture _database;
 
-        public BoardRepositoryCreateTests(DatabaseFixture database)
+        public CityRepositoryCreateTests(DatabaseFixture database)
         {
             _database = database;
         }
@@ -24,17 +24,17 @@ namespace WorldCities.Application.IntegrationTests.Persistence.Boards
         public async Task AddAsync_ValidBoard_BoardAdded()
         {           
             // Arrange
-            var testBoardName = "testBoard";
-            var board = new Board { Name = testBoardName };
-            var boardRepository =  _database.GetRepository<Board, int>();
+            var testCityName = "testCity";
+            var city = new City { Name = testCityName, Name_ASCII = testCityName };
+            var cityRepository =  _database.GetRepository<City, int>();
 
             // Act
-            var newboard = await boardRepository.AddAsync(board);
-            var boardAdded = (await _database.DbContext.Boards.ToListAsync())[0];
+            var newCity = await cityRepository.AddAsync(city);
+            var cityAdded = (await _database.DbContext.Cities.ToListAsync())[0];
 
             // Assert
-            boardAdded.Name.Should().Be(newboard.Name);
-            boardAdded.Id.Should().BeGreaterThan(0);
+            cityAdded.Name.Should().Be(newCity.Name);
+            cityAdded.Id.Should().BeGreaterThan(0);
         }
     }
 }

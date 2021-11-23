@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using FluentAssertions;
 using WorldCities.Application.Dto;
-using WorldCities.Application.Features.Boards.Commands.CreateBoard;
 using WorldCities.Application.Profiles;
 using WorldCities.Domain.Entities;
 using System;
 using System.Runtime.Serialization;
 using Xunit;
+using WorldCities.Application.Features.Cities.Commands.CreateCity;
 
 namespace WorldCities.Application.UnitTests.Profile
 {
@@ -36,9 +36,8 @@ namespace WorldCities.Application.UnitTests.Profile
         }
 
         [Theory]
-        [InlineData(typeof(Board), typeof(BoardDto))]
-        [InlineData(typeof(Board), typeof(BoardDetailDto))]
-        [InlineData(typeof(Board), typeof(CreateBoardCommand))]
+        [InlineData(typeof(City), typeof(CityDto))]
+        [InlineData(typeof(City), typeof(CreateCityCommand))]
         public void Map_SupportMappingFromSourceToDestination(Type source, Type destination)
         {
             // Arrange
