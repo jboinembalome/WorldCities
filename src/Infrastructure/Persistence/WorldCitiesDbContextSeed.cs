@@ -176,7 +176,7 @@ namespace WorldCities.Infrastructure.Persistence
                 // increment the counter 
                 numberOfCitiesAdded++;
             }
-            await context.SaveChangesAsync();
+            if (numberOfCitiesAdded > 0) await context.SaveChangesAsync();
         }
 
         private static async Task CreateUser(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, string role, string userId, string userName, string userMail, string userPassword)
